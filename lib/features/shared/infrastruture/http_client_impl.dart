@@ -20,9 +20,32 @@ class HttpClientImpl implements HttpClient {
     } catch (e) {
       if (e is DioException) {
         final errorMessage = _mapDioErrorToMessage(e, e.response?.data['message'].first);
-        return Left(
-          Failure(code: e.response?.statusCode, message: errorMessage),
-        );
+        return Left(Failure(code: e.response?.statusCode, message: errorMessage));
+      } else {
+        return Left(Failure(message: 'An unexpected error occurred'));
+      }
+    }
+  }
+
+  @override
+  Future<Either<Failure, T>> get<T>({
+    required String url,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParams,
+    required T Function(dynamic json) fromJson,
+  }) async {
+    try {
+      final response = await _dio.get(
+        url,
+        options: Options(headers: headers),
+        queryParameters: queryParams,
+      );
+
+      return Right(fromJson(response.data));
+    } catch (e) {
+      if (e is DioException) {
+        final errorMessage = _mapDioErrorToMessage(e, e.response?.data['message'].first);
+        return Left(Failure(code: e.response?.statusCode, message: errorMessage));
       } else {
         return Left(Failure(message: 'An unexpected error occurred'));
       }
@@ -30,14 +53,13 @@ class HttpClientImpl implements HttpClient {
   }
 }
 
-
-String _mapDioErrorToMessage(DioException e, String ? serverMessage){
-  if(serverMessage?.isNotEmpty == true){
+String _mapDioErrorToMessage(DioException e, String? serverMessage) {
+  if (serverMessage?.isNotEmpty == true) {
     return serverMessage!;
-  } 
+  }
   final statusCode = e.response?.statusCode;
 
-  switch(e.type){
+  switch (e.type) {
     case DioExceptionType.connectionTimeout:
       return 'Connection timeout';
     case DioExceptionType.sendTimeout:
@@ -62,5 +84,3 @@ String _mapDioErrorToMessage(DioException e, String ? serverMessage){
       return 'Unexpected error: ${e.message}';
   }
 }
-
-

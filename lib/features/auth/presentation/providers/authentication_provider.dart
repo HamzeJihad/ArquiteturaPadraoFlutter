@@ -2,13 +2,11 @@ import 'package:flutter_application_1/configs/configs.dart';
 import 'package:flutter_application_1/core/core.dart';
 import 'package:flutter_application_1/features/auth/domain/entities/entities.dart';
 import 'package:flutter_application_1/features/auth/domain/helpers/helpers.dart';
-import 'package:flutter_application_1/features/auth/domain/usecases/register_usecase.dart';
-import 'package:flutter_application_1/features/auth/presentation/providers/login/login_repository_provider.dart';
-import 'package:flutter_application_1/features/auth/presentation/providers/register/register_repository_provider.dart';
+import 'package:flutter_application_1/features/auth/domain/usecases/usecases.dart';
+import 'package:flutter_application_1/features/auth/presentation/providers/providers.dart';
 import 'package:flutter_application_1/features/auth/presentation/ui/helpers/messages.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/usecases/login_usecase.dart';
 
 part 'authentication_provider.g.dart';
 
@@ -42,7 +40,7 @@ class AuthenticationState {
   }
 }
 
-@Riverpod(keepAlive: true) 
+@Riverpod(keepAlive: true)
 class AuthenticationProvider extends _$AuthenticationProvider {
   @override
   FutureOr<AuthenticationState> build() => AuthenticationState();
@@ -71,5 +69,24 @@ class AuthenticationProvider extends _$AuthenticationProvider {
     );
 
     state = AsyncData(state.value!.copyWith(isLoading: false));
+  }
+
+  Future<void> verify() async {
+    state = AsyncData(state.value!.copyWith(status: AuthStatus.checking, isLoading: true));
+    final verifyStatusUsecase = VerifyStatusUsecase(ref.read(verifyStatusRepositoryProvider));
+
+    final result = await verifyStatusUsecase();
+    result.fold(
+      (failure) {
+        state = AsyncData(
+          state.value!.copyWith(status: AuthStatus.unauthenticated, errorMessage: failure, isLoading: false),
+        );
+      },
+      (user) {
+        state = AsyncData(
+          state.value!.copyWith(status: AuthStatus.authenticated, userEntity: user, isLoading: false),
+        );
+      },
+    );
   }
 }

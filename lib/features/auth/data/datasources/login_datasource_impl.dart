@@ -20,7 +20,7 @@ class LoginDatasourceImpl  implements LoginDatasource{
     return _httpClient.post(
       url: '/auth/login',
       body: RemoteAuthenticationParams.fromDomain(params).toMap(),
-      fromJson: (json)=> UseMapper.userModelToEntity(
+      fromJson: (json) async => UseMapper.userModelToEntity(
         UserResponseApi.fromJson(json).data.user
       ),
     );  

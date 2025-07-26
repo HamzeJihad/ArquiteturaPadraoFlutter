@@ -7,7 +7,7 @@ abstract class HttpClient {
   Future<Either<Failure, T>> post <T>({
     required String url,
     required Map<String, dynamic> body,
-    required T Function(dynamic json) fromJson,
+    required Future<T> Function(dynamic json) fromJson,
   });
 
 

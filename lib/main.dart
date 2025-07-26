@@ -1,44 +1,26 @@
-import 'dart:developer';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/configs.dart';
-import 'package:flutter_application_1/features/auth/data/datasources/login_datasource_impl.dart';
-import 'package:flutter_application_1/features/auth/data/repositories/repositories.dart';
-import 'package:flutter_application_1/features/auth/domain/helpers/authentication_param.dart';
-import 'package:flutter_application_1/features/auth/domain/usecases/login_usecase.dart';
-import 'package:flutter_application_1/features/shared/infrastruture/infra.dart';
+import 'package:flutter_application_1/features/auth/presentation/ui/helpers/helpers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
   await Environment.initEnvironment();
-  final dio = Dio(
-    BaseOptions(
-      baseUrl: Environment.apiUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      sendTimeout: const Duration(seconds: 30),
-    ),
-  );
-  final httpClient = HttpClientImpl(dio: dio);
-  final remoteDataSource = LoginDatasourceImpl(httpClient);
-  final repository = LoginRepositoryImpl(remoteDataSource);
-  final useCase = LoginUsecase(repository);
-
-  final result = await useCase(AuthenticationParam(email: 'hamze.user@gmail.com', password: '12345677712'));
-
-  result.fold(
-    (failure) => log('falha ao logar: ${failure.message}'),
-    (user) => log('logado com sucesso: ${user.name}'),
-  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(routerConfig: router, title: 'Flutter Demo', theme: AppTheme().getTheme(true));
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
+
+    return MaterialApp.router(
+      routerConfig: router,
+      title: 'Flutter Demo',
+      theme: AppTheme().getTheme(true),
+      scaffoldMessengerKey: MessagesService.scaffoldMessengerKey,
+    );
   }
 }

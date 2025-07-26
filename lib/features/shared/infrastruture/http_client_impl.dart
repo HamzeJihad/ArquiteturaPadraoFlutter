@@ -11,15 +11,15 @@ class HttpClientImpl implements HttpClient {
   Future<Either<Failure, T>> post<T>({
     required String url,
     required Map<String, dynamic> body,
-    required T Function(dynamic json) fromJson,
+    required Future<T> Function(dynamic json) fromJson,
   }) async {
     try {
       final response = await _dio.post(url, data: body);
 
-      return Right(fromJson(response.data));
+      return Right(await fromJson(response.data));
     } catch (e) {
       if (e is DioException) {
-        final errorMessage = _mapDioErrorToMessage(e, e.response?.data['message']);
+        final errorMessage = _mapDioErrorToMessage(e, e.response?.data['message'].first);
         return Left(
           Failure(code: e.response?.statusCode, message: errorMessage),
         );
@@ -48,6 +48,7 @@ String _mapDioErrorToMessage(DioException e, String ? serverMessage){
       if (statusCode == 400) {
         return 'Bad request';
       } else if (statusCode == 401) {
+        //chama o serviço de regenerate token
         return 'Unauthorized';
       } else if (statusCode == 403) {
         return 'Forbidden';
@@ -61,3 +62,5 @@ String _mapDioErrorToMessage(DioException e, String ? serverMessage){
       return 'Unexpected error: ${e.message}';
   }
 }
+
+

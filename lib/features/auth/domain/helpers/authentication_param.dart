@@ -1,6 +1,6 @@
 class AuthenticationParam {
-  final String email;
-  final String password;
+   String email;
+   String password;
 
   AuthenticationParam({required this.email, required this.password});
 }

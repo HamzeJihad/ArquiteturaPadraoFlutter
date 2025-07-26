@@ -19,7 +19,12 @@ class HttpClientImpl implements HttpClient {
       return Right(await fromJson(response.data));
     } catch (e) {
       if (e is DioException) {
-        final errorMessage = _mapDioErrorToMessage(e, e.response?.data['message'].first);
+        if (e.response?.data['message'] is String) {
+          final errorMessage = _mapDioErrorToMessage(e, e.response?.data['message']);
+          return Left(Failure(code: e.response?.statusCode, message: errorMessage));
+        }
+
+        final errorMessage = e.response?.data['message'].first;
         return Left(Failure(code: e.response?.statusCode, message: errorMessage));
       } else {
         return Left(Failure(message: 'An unexpected error occurred'));
@@ -44,7 +49,12 @@ class HttpClientImpl implements HttpClient {
       return Right(fromJson(response.data));
     } catch (e) {
       if (e is DioException) {
-        final errorMessage = _mapDioErrorToMessage(e, e.response?.data['message'].first);
+        if (e.response?.data['message'] is String) {
+          final errorMessage = _mapDioErrorToMessage(e, e.response?.data['message']);
+          return Left(Failure(code: e.response?.statusCode, message: errorMessage));
+        }
+
+        final errorMessage = e.response?.data['message'].first;
         return Left(Failure(code: e.response?.statusCode, message: errorMessage));
       } else {
         return Left(Failure(message: 'An unexpected error occurred'));

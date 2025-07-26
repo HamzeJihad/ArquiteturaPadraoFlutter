@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/configs/router/app_router.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SplashScreen extends StatefulWidget {
+import '../../../providers/authentication_provider.dart';
+
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
 
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
-        context.push(introScreen);
+       ref.read(authenticationProviderProvider.notifier).verifyStatus();
       }
     });
   }

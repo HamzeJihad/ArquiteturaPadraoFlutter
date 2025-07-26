@@ -7,7 +7,6 @@ import 'package:flutter_application_1/features/auth/presentation/providers/provi
 import 'package:flutter_application_1/features/auth/presentation/ui/helpers/messages.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-
 part 'authentication_provider.g.dart';
 
 enum AuthStatus { checking, authenticated, unauthenticated }
@@ -51,8 +50,14 @@ class AuthenticationProvider extends _$AuthenticationProvider {
 
     final result = await loginUseCase(params);
     result.fold(
-      (failure) => MessagesService.showCustomSnackBar('Falha ao logar ${failure.message}', error: true),
-      (user) => ref.read(appRouterProvider).push(homeScreen),
+      (failure) {
+        MessagesService.showCustomSnackBar('Falha ao logar ${failure.message}', error: true);
+        _setAuthStatusWhenError(failure);
+      },
+      (user) {
+        _setAuthStatusWhenSuccess(user);
+        ref.read(appRouterProvider).push(homeScreen);
+      },
     );
 
     state = AsyncData(state.value!.copyWith(isLoading: false));
@@ -64,29 +69,56 @@ class AuthenticationProvider extends _$AuthenticationProvider {
 
     final result = await registerUseCase(params);
     result.fold(
-      (failure) => MessagesService.showCustomSnackBar('Falha ao registrar ${failure.message}', error: true),
-      (user) => ref.read(appRouterProvider).push(signInScreen),
+      (failure) {
+        MessagesService.showCustomSnackBar('Falha ao registrar ${failure.message}', error: true);
+        _setAuthStatusWhenError(failure);
+      },
+      (user) {
+        _setAuthStatusWhenSuccess(user);
+        ref.read(appRouterProvider).push(signInScreen);
+      },
     );
 
     state = AsyncData(state.value!.copyWith(isLoading: false));
   }
 
-  Future<void> verify() async {
+  Future<void> verifyStatus() async {
     state = AsyncData(state.value!.copyWith(status: AuthStatus.checking, isLoading: true));
     final verifyStatusUsecase = VerifyStatusUsecase(ref.read(verifyStatusRepositoryProvider));
 
     final result = await verifyStatusUsecase();
     result.fold(
       (failure) {
-        state = AsyncData(
-          state.value!.copyWith(status: AuthStatus.unauthenticated, errorMessage: failure, isLoading: false),
-        );
+
+        _setAuthStatusWhenError(failure);
+        ref.read(appRouterProvider).push(signInScreen);
       },
       (user) {
-        state = AsyncData(
-          state.value!.copyWith(status: AuthStatus.authenticated, userEntity: user, isLoading: false),
-        );
+        _setAuthStatusWhenSuccess(user);
+        ref.read(appRouterProvider).push(homeScreen);
       },
+    );
+  }
+
+  void _setAuthStatusWhenSuccess(UserEntity user) {
+    state = AsyncData(
+      state.value!.copyWith(
+        status: AuthStatus.authenticated,
+        userEntity: user,
+        isLoading: false,
+        errorMessage: null,
+      ),
+    );
+  }
+
+  void _setAuthStatusWhenError(Failure failure) {
+    state = AsyncData(
+      state.value!.copyWith(
+        status: AuthStatus.unauthenticated,
+        userEntity: null,
+        isLoading: false,
+        errorMessage: failure,
+      ),
     );
   }
 }

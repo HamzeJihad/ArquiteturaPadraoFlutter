@@ -12,15 +12,20 @@ class RegisterDatasourceImpl implements RegisterDatasource {
   final HttpClient _httpClient;
   final SecureStorageAdapter _secureStorageAdapter;
 
-  RegisterDatasourceImpl({required HttpClient httpClient, required SecureStorageAdapter secureStorageAdapter}) : _httpClient = httpClient, _secureStorageAdapter = secureStorageAdapter;
-
+  RegisterDatasourceImpl({required HttpClient httpClient, required SecureStorageAdapter secureStorageAdapter})
+    : _httpClient = httpClient,
+      _secureStorageAdapter = secureStorageAdapter;
 
   @override
   Future<Either<Failure, UserEntity>> register(RegisterParam params) {
     return _httpClient.post(
       url: '/auth/register',
       body: RemoteRegisterParams.fromDomain(params).toMap(),
-      fromJson: (json) async => UseMapper.userModelToEntity(UserResponseApi.fromJson(json).data.user),
+      fromJson: (json) async {
+        final result = UserResponseApi.fromJson(json).data;
+        _secureStorageAdapter.save(key: 'token', value: result.token);
+        return UseMapper.userModelToEntity(result.user);
+      },
     );
   }
 }

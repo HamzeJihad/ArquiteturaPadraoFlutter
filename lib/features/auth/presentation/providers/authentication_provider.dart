@@ -95,7 +95,7 @@ class AuthenticationProvider extends _$AuthenticationProvider {
       },
       (user) {
         _setAuthStatusWhenSuccess(user);
-        ref.read(appRouterProvider).push(homeScreen);
+        ref.read(appRouterProvider).pushReplacement(homeScreen);
       },
     );
   }

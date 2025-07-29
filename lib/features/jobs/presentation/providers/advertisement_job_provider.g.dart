@@ -1,27 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'authentication_provider.dart';
+part of 'advertisement_job_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authenticationProviderHash() =>
-    r'bad304ad086b481511df34e978238f0c7b139179';
+String _$advertisementJobProviderHash() =>
+    r'51f8b0ef36070a151464898888681895ed01a3b5';
 
-/// See also [AuthenticationProvider].
-@ProviderFor(AuthenticationProvider)
-final authenticationProviderProvider =
-    AsyncNotifierProvider<AuthenticationProvider, AuthenticationState>.internal(
-      AuthenticationProvider.new,
-      name: r'authenticationProviderProvider',
+/// See also [AdvertisementJobProvider].
+@ProviderFor(AdvertisementJobProvider)
+final advertisementJobProviderProvider =
+    AsyncNotifierProvider<
+      AdvertisementJobProvider,
+      AdvertisementJobState
+    >.internal(
+      AdvertisementJobProvider.new,
+      name: r'advertisementJobProviderProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$authenticationProviderHash,
+          : _$advertisementJobProviderHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$AuthenticationProvider = AsyncNotifier<AuthenticationState>;
+typedef _$AdvertisementJobProvider = AsyncNotifier<AdvertisementJobState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

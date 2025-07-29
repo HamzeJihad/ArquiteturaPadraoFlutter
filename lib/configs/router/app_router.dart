@@ -1,17 +1,19 @@
 import 'package:flutter_application_1/features/auth/presentation/ui/screens/screens.dart';
+import 'package:flutter_application_1/features/jobs/domain/entities/entities.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'app_router.g.dart';
+import '../../features/jobs/presentation/ui/screens/job_details_screen/job_details_screen.dart';
 
+part 'app_router.g.dart';
 
 const splashScreen = '/splash-screen';
 const introScreen = '/intro-screen';
 const signInScreen = '/sign-in-screen';
 const signUpScreen = '/sign-up-screen';
 const homeScreen = '/home-screen';
-
+const detailsScreen = '/details-screen';
 
 @riverpod
 GoRouter appRouter(Ref ref) {
@@ -46,6 +48,13 @@ GoRouter appRouter(Ref ref) {
         path: homeScreen,
         builder: (context, state) {
           return const HomeScreen();
+        },
+      ),
+      GoRoute(
+        path: detailsScreen,
+        builder: (context, state) {
+          final advertisementJob = state.extra as AdvertisementJobEntity;
+          return JobDetailsScreen(job: advertisementJob);
         },
       ),
     ],

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/configs/configs.dart';
 import 'package:flutter_application_1/features/jobs/presentation/providers/advertisement_job_provider.dart';
 import 'package:flutter_application_1/features/shared/components/components.dart';
 import 'package:flutter_application_1/features/shared/helpers/extensions/date_time_extension.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -30,39 +32,47 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           return ListView.builder(
             itemBuilder: (context, index) {
               final job = data.advertisementJobs![index];
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Card(
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.blueGrey[900],
-                          child: CustomText(job.jobTitle.substring(0, 1).toUpperCase()),
-                        ),
-                        title: CustomText(job.jobTitle, fontSize: 20, fontWeight: FontWeight.bold),
-                        subtitle: CustomText(job.companyName),
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(child: CustomTextWithBackground(job.level)),
-                          Flexible(child: CustomTextWithBackground(job.location)),
-                          Flexible(
-                            child: CustomTextWithBackground(
-                              '${job.currency} ${(job.salaryRange / 100).toStringAsFixed(2).replaceAll('.', ',')}/m',
-                            ),
+              return GestureDetector(
+                onTap: (){
+                  context.push(
+                    detailsScreen,
+                    extra: job,
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Card(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.blueGrey[900],
+                            child: CustomText(job.jobTitle.substring(0, 1).toUpperCase()),
                           ),
-                        ],
-                      ),
-
-                      ListTile(
-                        leading: Icon(Icons.access_time, color: Colors.white),
-
-                        title: CustomText(DateTime.now().format()),
-                      ),
-                    ],
+                          title: CustomText(job.jobTitle, fontSize: 20, fontWeight: FontWeight.bold),
+                          subtitle: CustomText(job.companyName),
+                        ),
+                
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(child: CustomTextWithBackground(job.level)),
+                            Flexible(child: CustomTextWithBackground(job.location)),
+                            Flexible(
+                              child: CustomTextWithBackground(
+                                '${job.currency} ${(job.salaryRange / 100).toStringAsFixed(2).replaceAll('.', ',')}/m',
+                              ),
+                            ),
+                          ],
+                        ),
+                
+                        ListTile(
+                          leading: Icon(Icons.access_time, color: Colors.white),
+                
+                          title: CustomText(DateTime.now().format()),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );

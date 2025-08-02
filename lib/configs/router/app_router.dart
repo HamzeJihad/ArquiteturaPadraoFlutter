@@ -1,10 +1,10 @@
 import 'package:flutter_application_1/features/auth/presentation/ui/screens/screens.dart';
-import 'package:flutter_application_1/features/jobs/domain/entities/entities.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../features/jobs/presentation/ui/screens/job_details_screen/job_details_screen.dart';
+import '../../features/jobs/presentation/ui/screens/screens.dart';
+
 
 part 'app_router.g.dart';
 
@@ -53,8 +53,8 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: detailsScreen,
         builder: (context, state) {
-          final advertisementJob = state.extra as AdvertisementJobEntity;
-          return JobDetailsScreen(job: advertisementJob);
+          final refJob = state.extra as String;
+          return JobDetailsScreen(refJob: refJob);
         },
       ),
     ],

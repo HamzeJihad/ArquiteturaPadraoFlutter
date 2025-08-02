@@ -1,4 +1,4 @@
-export './http_client_provider.dart';
+export '../../../../core/provider/http_client_provider.dart';
 export 'login/login_repository_provider.dart';
 export 'authentication_provider.dart';
 export 'register/register_repository_provider.dart';

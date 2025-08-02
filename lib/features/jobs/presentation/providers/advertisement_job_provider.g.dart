@@ -7,7 +7,7 @@ part of 'advertisement_job_provider.dart';
 // **************************************************************************
 
 String _$advertisementJobProviderHash() =>
-    r'51f8b0ef36070a151464898888681895ed01a3b5';
+    r'71b10ae6884cceb1cd4d6220e8a1ccf2c366bb12';
 
 /// See also [AdvertisementJobProvider].
 @ProviderFor(AdvertisementJobProvider)

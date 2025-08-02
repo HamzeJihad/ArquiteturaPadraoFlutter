@@ -6,24 +6,26 @@ import 'package:flutter_application_1/features/jobs/domain/entities/entities.dar
 
 import '../../../shared/infrastruture/cache/secure_storage_adapter.dart';
 
-class GetAdvertisementJobsDatasourceImpl implements GetAdvertisementJobsDatasource {
+class GetDetailsAdvertisementJobDatasourceImpl implements GetDetailsAdvertisementJobDatasource {
   final HttpClient _httpClient;
   final SecureStorageAdapter _secureStorageAdapter;
 
-  GetAdvertisementJobsDatasourceImpl(this._httpClient, this._secureStorageAdapter);
+  GetDetailsAdvertisementJobDatasourceImpl(this._httpClient, this._secureStorageAdapter);
 
   @override
-  Future<Either<Failure, List<AdvertisementJobEntity>>> getAdvertisementJobs()async {
+  Future<Either<Failure,AdvertisementJobEntity>> getDetailsAdvertisement(String idAdvertisement)async {
     final token = await _secureStorageAdapter.fetch(key: 'token');
 
     return _httpClient.get(
-      url: '/advertisement-jobs',
+      url: '/advertisement-jobs/$idAdvertisement',
       headers: {
         'Authorization': 'Bearer $token',
       },
-      fromJson: (json) => AdvertisementResponseApi.fromJson(json).data
-          .map((e) => AdvertisementMapper.advertisementModelToEntity(e))
-          .toList(),
+      fromJson: (json) {
+        
+        final result = DetailsAdvertisementResponseApi.fromJson(json).data;
+        return AdvertisementMapper.advertisementModelToEntity(result);
+      }
     );
   }
 }

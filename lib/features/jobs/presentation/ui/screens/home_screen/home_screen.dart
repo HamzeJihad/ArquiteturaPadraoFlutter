@@ -36,7 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onTap: (){
                   context.push(
                     detailsScreen,
-                    extra: job,
+                    extra: job.id,
                   );
                 },
                 child: Padding(

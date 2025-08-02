@@ -14,4 +14,9 @@ abstract class HttpClient {
     Map<String, dynamic>? queryParams,
     required T Function(dynamic json) fromJson,
   });
+  
 }
+
+ 
+
+

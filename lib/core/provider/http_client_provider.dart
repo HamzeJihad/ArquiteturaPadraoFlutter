@@ -5,7 +5,7 @@ import 'package:flutter_application_1/features/shared/infrastruture/http_client_
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../configs/constants/env/envs.dart';
+import '../../configs/constants/env/envs.dart';
 
 part 'http_client_provider.g.dart';
 

@@ -1,1 +1,2 @@
 export './advertisement_jobs/get_advertisement_jobs_repository_provider.dart';
+export './details_advertisement_job/get_details_advertisement_job_repository_provider.dart';

@@ -39,6 +39,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                 ),
 
                 CustomTextFormField(
+                  obscureText: true,
                   onSaved: (password) => loginParams.password = password ?? '',
                   label: 'Password',
                   prefixIcon: Icon(Icons.security_outlined),

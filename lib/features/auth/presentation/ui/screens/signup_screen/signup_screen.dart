@@ -46,6 +46,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 CustomTextFormField(validator: phoneValidator, label: 'Phone', prefixIcon: Icon(Icons.phone)),
 
                 CustomTextFormField(
+                  obscureText: true,
                   validator: (value) {
                     _formKey.currentState!.save();
                     confirmPasswordValidator(value, signupParams.password);
@@ -57,6 +58,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   onSaved: (password) => signupParams.password = password ?? '',
                 ),
                 CustomTextFormField(
+                  obscureText: true,
+
                   validator: passwordValidator,
                   label: 'Confirm Password',
                   prefixIcon: Icon(Icons.security_outlined),
